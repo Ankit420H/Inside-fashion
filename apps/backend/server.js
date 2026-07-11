@@ -69,6 +69,11 @@ app.use((err, req, res, _next) => {
 });
 
 // Start server
-app.listen(port, () => {
-  console.info(`[${new Date().toISOString()}] Server started on PORT: ${port}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(port, () => {
+    console.info(`[${new Date().toISOString()}] Server started on PORT: ${port}`);
+  });
+}
+
+// Export for Vercel Serverless
+export default app;
