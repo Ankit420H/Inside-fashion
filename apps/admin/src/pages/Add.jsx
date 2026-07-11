@@ -90,12 +90,23 @@ const Add = ({token}) => {
         setImage4(false)
         setPrice('')
       } else {
-        toast.error(response.data.message)
+        // If validation errors exist, show the first specific error message instead of generic "Validation failed"
+        const validationErrors = response.data.errors;
+        if (validationErrors && validationErrors.length > 0) {
+          toast.error(validationErrors[0].message);
+        } else {
+          toast.error(response.data.message);
+        }
       }
 
     } catch (error) {
-      console.error('Add product error:', error.message);
-      toast.error(error.response?.data?.message || error.message)
+      console.error('Add product error:', error);
+      const validationErrors = error.response?.data?.errors;
+      if (validationErrors && validationErrors.length > 0) {
+        toast.error(validationErrors[0].message);
+      } else {
+        toast.error(error.response?.data?.message || error.message);
+      }
     }
    }
 

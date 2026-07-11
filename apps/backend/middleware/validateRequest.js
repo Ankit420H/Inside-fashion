@@ -12,10 +12,11 @@ export const validateRequest = (schema) => (req, res, next) => {
     next();
   } catch (error) {
     if (error.name === 'ZodError') {
+      console.error(`[${new Date().toISOString()}] Zod Validation Error:`, error.issues);
       return res.status(400).json({
         success: false,
         message: 'Validation failed',
-        errors: (error.issues || []).map((e) => ({ path: e.path.join('.'), message: e.message })),
+        errors: error.issues || [],
       });
     }
     next(error);
