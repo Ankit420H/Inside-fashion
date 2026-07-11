@@ -37,7 +37,7 @@ RAZORPAY_KEY_SECRET=your_razorpay_secret
 
 **`apps/frontend/.env`** and **`apps/admin/.env`**
 ```env
-VITE_BACKEND_URL=http://localhost:4000
+VITE_BACKEND_URL=https://your-backend-api.vercel.app
 ```
 
 ### 3. Run the Ecosystem
