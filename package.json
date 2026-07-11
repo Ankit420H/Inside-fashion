@@ -1,0 +1,14 @@
+{
+  "name": "inside-fashion-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspaces",
+    "build": "npm run build --workspaces",
+    "start:backend": "npm start --workspace=backend",
+    "install:all": "npm install"
+  }
+}
