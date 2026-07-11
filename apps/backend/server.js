@@ -21,27 +21,9 @@ connectCloudinary();
 // Security middleware
 app.use(helmet());
 
-const allowedOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(',').map((origin) => origin.trim().replace(/\/$/, ''))
-  : [];
-
 app.use(
   cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (server-to-server, curl, mobile apps)
-      if (!origin) return callback(null, true);
-
-      // Check if origin matches or starts with allowed origin (to handle Vercel branches, etc.)
-      const isAllowed = allowedOrigins.some((allowedOrigin) => origin.startsWith(allowedOrigin));
-
-      if (isAllowed || process.env.NODE_ENV !== 'production') {
-        callback(null, true);
-      } else {
-        // Do not throw an Error as it gets caught by global handler and drops CORS headers.
-        // Instead, pass false to let CORS block it gracefully.
-        callback(null, false);
-      }
-    },
+    origin: true, // Dynamically reflect the request origin to support all Vercel preview URLs
     credentials: true,
   })
 );
