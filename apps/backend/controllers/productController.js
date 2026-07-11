@@ -23,7 +23,9 @@ const addProduct = async (req, res) => {
 
     const imagesUrl = await Promise.all(
       images.map(async (item) => {
-        const result = await cloudinary.uploader.upload(item.path, { resource_type: 'image' });
+        const b64 = Buffer.from(item.buffer).toString('base64');
+        const dataURI = `data:${item.mimetype};base64,${b64}`;
+        const result = await cloudinary.uploader.upload(dataURI, { resource_type: 'image' });
         return result.secure_url;
       })
     );
@@ -45,8 +47,13 @@ const addProduct = async (req, res) => {
 
     res.status(201).json({ success: true, message: 'Product added successfully.' });
   } catch (error) {
-    console.error(`[${new Date().toISOString()}] Add product error:`, error.message);
-    res.status(500).json({ success: false, message: 'Failed to add product.' });
+    console.error(`[${new Date().toISOString()}] Add product error:`, error);
+    
+    if (error.message && error.message.includes('Must supply api_key')) {
+      return res.status(500).json({ success: false, message: 'Cloudinary configuration is missing.' });
+    }
+
+    res.status(500).json({ success: false, message: error.message || 'Failed to add product.' });
   }
 };
 
