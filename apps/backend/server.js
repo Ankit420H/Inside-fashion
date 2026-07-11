@@ -21,19 +21,25 @@ connectCloudinary();
 // Security middleware
 app.use(helmet());
 
-// CORS configuration – restrict to known origins in production
 const allowedOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(',').map((origin) => origin.trim())
+  ? process.env.ALLOWED_ORIGINS.split(',').map((origin) => origin.trim().replace(/\/$/, ''))
   : [];
 
 app.use(
   cors({
     origin: (origin, callback) => {
       // Allow requests with no origin (server-to-server, curl, mobile apps)
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin) return callback(null, true);
+
+      // Check if origin matches or starts with allowed origin (to handle Vercel branches, etc.)
+      const isAllowed = allowedOrigins.some((allowedOrigin) => origin.startsWith(allowedOrigin));
+
+      if (isAllowed || process.env.NODE_ENV !== 'production') {
         callback(null, true);
       } else {
-        callback(new Error(`Origin ${origin} not allowed by CORS`));
+        // Do not throw an Error as it gets caught by global handler and drops CORS headers.
+        // Instead, pass false to let CORS block it gracefully.
+        callback(null, false);
       }
     },
     credentials: true,
@@ -72,10 +78,6 @@ app.use((req, res) => {
 // Global error handler
 app.use((err, req, res, _next) => {
   console.error(`[${new Date().toISOString()}] Error:`, err.message);
-
-  if (err.message?.includes('not allowed by CORS')) {
-    return res.status(403).json({ success: false, message: 'CORS origin not allowed' });
-  }
 
   const statusCode = err.statusCode || 500;
   res.status(statusCode).json({

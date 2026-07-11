@@ -68,38 +68,38 @@ const Add = ({token}) => {
           <div className='flex gap-2'>
             <label htmlFor="image1">
               <img className='w-20' src={!image1 ? assets.upload_area : URL.createObjectURL(image1)} alt="" />
-              <input onChange={(e)=>setImage1(e.target.files[0])} type="file" id="image1" hidden/>
+              <input onChange={(e)=>setImage1(e.target.files[0])} type="file" id="image1" name="image1" hidden/>
             </label>
             <label htmlFor="image2">
               <img className='w-20' src={!image2 ? assets.upload_area : URL.createObjectURL(image2)} alt="" />
-              <input onChange={(e)=>setImage2(e.target.files[0])} type="file" id="image2" hidden/>
+              <input onChange={(e)=>setImage2(e.target.files[0])} type="file" id="image2" name="image2" hidden/>
             </label>
             <label htmlFor="image3">
               <img className='w-20' src={!image3 ? assets.upload_area : URL.createObjectURL(image3)} alt="" />
-              <input onChange={(e)=>setImage3(e.target.files[0])} type="file" id="image3" hidden/>
+              <input onChange={(e)=>setImage3(e.target.files[0])} type="file" id="image3" name="image3" hidden/>
             </label>
             <label htmlFor="image4">
               <img className='w-20' src={!image4 ? assets.upload_area : URL.createObjectURL(image4)} alt="" />
-              <input onChange={(e)=>setImage4(e.target.files[0])} type="file" id="image4" hidden/>
+              <input onChange={(e)=>setImage4(e.target.files[0])} type="file" id="image4" name="image4" hidden/>
             </label>
           </div>
         </div>
 
         <div className='w-full'>
           <p className='mb-2'>Product name</p>
-          <input onChange={(e)=>setName(e.target.value)} value={name} className='w-full max-w-[500px] px-3 py-2' type="text" placeholder='Type here' required/>
+          <input onChange={(e)=>setName(e.target.value)} value={name} id="name" name="name" className='w-full max-w-[500px] px-3 py-2' type="text" placeholder='Type here' required/>
         </div>
 
         <div className='w-full'>
           <p className='mb-2'>Product description</p>
-          <textarea onChange={(e)=>setDescription(e.target.value)} value={description} className='w-full max-w-[500px] px-3 py-2' type="text" placeholder='Write content here' required/>
+          <textarea onChange={(e)=>setDescription(e.target.value)} value={description} id="description" name="description" className='w-full max-w-[500px] px-3 py-2' type="text" placeholder='Write content here' required/>
         </div>
 
         <div className='flex flex-col sm:flex-row gap-2 w-full sm:gap-8'>
 
             <div>
               <p className='mb-2'>Product category</p>
-              <select onChange={(e) => setCategory(e.target.value)} className='w-full px-3 py-2'>
+              <select onChange={(e) => setCategory(e.target.value)} id="category" name="category" className='w-full px-3 py-2'>
                   <option value="Men">Men</option>
                   <option value="Women">Women</option>
                   <option value="Kids">Kids</option>
@@ -108,7 +108,7 @@ const Add = ({token}) => {
 
             <div>
               <p className='mb-2'>Sub category</p>
-              <select onChange={(e) => setSubCategory(e.target.value)} className='w-full px-3 py-2'>
+              <select onChange={(e) => setSubCategory(e.target.value)} id="subCategory" name="subCategory" className='w-full px-3 py-2'>
                   <option value="Topwear">Topwear</option>
                   <option value="Bottomwear">Bottomwear</option>
                   <option value="Winterwear">Winterwear</option>
@@ -117,7 +117,7 @@ const Add = ({token}) => {
 
             <div>
               <p className='mb-2'>Product Price</p>
-              <input onChange={(e) => setPrice(e.target.value)} value={price} className='w-full px-3 py-2 sm:w-[120px]' type="Number" placeholder='25' />
+              <input onChange={(e) => setPrice(e.target.value)} value={price} id="price" name="price" className='w-full px-3 py-2 sm:w-[120px]' type="Number" placeholder='25' />
             </div>
 
         </div>
@@ -148,7 +148,7 @@ const Add = ({token}) => {
         </div>
 
         <div className='flex gap-2 mt-2'>
-          <input onChange={() => setBestseller(prev => !prev)} checked={bestseller} type="checkbox" id='bestseller' />
+          <input onChange={() => setBestseller(prev => !prev)} checked={bestseller} type="checkbox" id='bestseller' name='bestseller' />
           <label className='cursor-pointer' htmlFor="bestseller">Add to bestseller</label>
         </div>
 

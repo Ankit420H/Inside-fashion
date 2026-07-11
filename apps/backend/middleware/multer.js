@@ -6,6 +6,10 @@ const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'im
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    // Vercel Serverless Functions only allow writing to /tmp
+    cb(null, '/tmp');
+  },
   filename: function (req, file, callback) {
     // Use a unique filename to prevent overwrites
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
