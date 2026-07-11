@@ -66,3 +66,21 @@ This monorepo is fully optimized for Vercel deployment. You will need to create 
    - Import this repository to Vercel a third time.
    - Set the **Root Directory** to `apps/admin`.
    - Add `VITE_BACKEND_URL` and set it to your live backend URL from step 1.
+
+## 🔒 Security Notes
+- **Secrets Management:** Never commit `.env` files to version control. If secrets are exposed, rotate them immediately. The `.env` file at the root should not contain production secrets.
+- **Admin Access:** The default admin password should be changed immediately after setup. Admin authentication requires a valid JWT with the `admin` role.
+- **File Uploads:** Uploaded images are restricted to common image formats (JPEG, PNG, WebP, GIF) and limited to 5MB per file to prevent abuse.
+- **CORS:** Ensure `ALLOWED_ORIGINS` is set in production to restrict API access to trusted domains.
+
+## 🧪 Testing and Verification
+To verify the integrity of the ecosystem after making changes, run the following commands:
+```bash
+# Build verification
+npm run build --workspace=apps/frontend
+npm run build --workspace=apps/admin
+
+# Lint check
+npm run lint --workspace=apps/frontend
+npm run lint --workspace=apps/admin
+```

@@ -1,12 +1,18 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const userSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
+const userSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true, trim: true },
+    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     password: { type: String, required: true },
-    cartData: { type: Object, default: {} }
-}, { minimize: false })
+    cartData: { type: Object, default: {} },
+  },
+  { minimize: false, timestamps: true }
+);
 
-const userModel = mongoose.models.user || mongoose.model('user',userSchema);
+// Index for faster email lookups
+userSchema.index({ email: 1 });
 
-export default userModel
+const userModel = mongoose.models.user || mongoose.model('user', userSchema);
+
+export default userModel;

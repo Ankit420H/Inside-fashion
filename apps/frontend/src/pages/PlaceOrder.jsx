@@ -85,7 +85,7 @@ const PlaceOrder = () => {
             switch (method) {
 
                 // API Calls for COD
-                case 'cod':
+                case 'cod': {
                     const response = await axios.post(backendUrl + '/api/order/place',orderData,{headers:{token}})
                     if (response.data.success) {
                         setCartItems({})
@@ -94,8 +94,9 @@ const PlaceOrder = () => {
                         toast.error(response.data.message)
                     }
                     break;
+                }
 
-                case 'stripe':
+                case 'stripe': {
                     const responseStripe = await axios.post(backendUrl + '/api/order/stripe',orderData,{headers:{token}})
                     if (responseStripe.data.success) {
                         const {session_url} = responseStripe.data
@@ -104,15 +105,15 @@ const PlaceOrder = () => {
                         toast.error(responseStripe.data.message)
                     }
                     break;
+                }
 
-                case 'razorpay':
-
+                case 'razorpay': {
                     const responseRazorpay = await axios.post(backendUrl + '/api/order/razorpay', orderData, {headers:{token}})
                     if (responseRazorpay.data.success) {
                         initPay(responseRazorpay.data.order)
                     }
-
                     break;
+                }
 
                 default:
                     break;
@@ -145,10 +146,10 @@ const PlaceOrder = () => {
                     <input onChange={onChangeHandler} name='state' value={formData.state} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="text" placeholder='State' />
                 </div>
                 <div className='flex gap-3'>
-                    <input required onChange={onChangeHandler} name='zipcode' value={formData.zipcode} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="number" placeholder='Zipcode' />
+                    <input required onChange={onChangeHandler} name='zipcode' value={formData.zipcode} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="text" inputMode="numeric" pattern="[0-9]*" placeholder='Zipcode' />
                     <input required onChange={onChangeHandler} name='country' value={formData.country} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="text" placeholder='Country' />
                 </div>
-                <input required onChange={onChangeHandler} name='phone' value={formData.phone} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="number" placeholder='Phone' />
+                <input required onChange={onChangeHandler} name='phone' value={formData.phone} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="tel" placeholder='Phone' />
             </div>
 
             {/* ------------- Right Side ------------------ */}
