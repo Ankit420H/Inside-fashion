@@ -1,8 +1,22 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {assets} from '../assets/assets'
 import axios from 'axios'
 import { backendUrl } from '../App'
 import { toast } from 'react-toastify'
+
+const useImagePreview = (file) => {
+  const [preview, setPreview] = useState(null);
+  useEffect(() => {
+    if (!file) {
+      setPreview(null);
+      return;
+    }
+    const objectUrl = URL.createObjectURL(file);
+    setPreview(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [file]);
+  return preview;
+};
 
 const Add = ({token}) => {
 
@@ -10,6 +24,11 @@ const Add = ({token}) => {
   const [image2,setImage2] = useState(false)
   const [image3,setImage3] = useState(false)
   const [image4,setImage4] = useState(false)
+
+  const image1Preview = useImagePreview(image1)
+  const image2Preview = useImagePreview(image2)
+  const image3Preview = useImagePreview(image3)
+  const image4Preview = useImagePreview(image4)
 
    const [name, setName] = useState("");
    const [description, setDescription] = useState("");
@@ -55,7 +74,7 @@ const Add = ({token}) => {
       }
 
     } catch (error) {
-      console.log(error);
+      console.error('Add product error:', error.message);
       toast.error(error.message)
     }
    }
@@ -67,19 +86,19 @@ const Add = ({token}) => {
 
           <div className='flex gap-2'>
             <label htmlFor="image1">
-              <img className='w-20' src={!image1 ? assets.upload_area : URL.createObjectURL(image1)} alt="" />
+              <img className='w-20 cursor-pointer' src={!image1 ? assets.upload_area : image1Preview} alt="Upload image 1" />
               <input onChange={(e)=>setImage1(e.target.files[0])} type="file" id="image1" name="image1" hidden/>
             </label>
             <label htmlFor="image2">
-              <img className='w-20' src={!image2 ? assets.upload_area : URL.createObjectURL(image2)} alt="" />
+              <img className='w-20 cursor-pointer' src={!image2 ? assets.upload_area : image2Preview} alt="Upload image 2" />
               <input onChange={(e)=>setImage2(e.target.files[0])} type="file" id="image2" name="image2" hidden/>
             </label>
             <label htmlFor="image3">
-              <img className='w-20' src={!image3 ? assets.upload_area : URL.createObjectURL(image3)} alt="" />
+              <img className='w-20 cursor-pointer' src={!image3 ? assets.upload_area : image3Preview} alt="Upload image 3" />
               <input onChange={(e)=>setImage3(e.target.files[0])} type="file" id="image3" name="image3" hidden/>
             </label>
             <label htmlFor="image4">
-              <img className='w-20' src={!image4 ? assets.upload_area : URL.createObjectURL(image4)} alt="" />
+              <img className='w-20 cursor-pointer' src={!image4 ? assets.upload_area : image4Preview} alt="Upload image 4" />
               <input onChange={(e)=>setImage4(e.target.files[0])} type="file" id="image4" name="image4" hidden/>
             </label>
           </div>

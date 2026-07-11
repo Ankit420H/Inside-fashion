@@ -12,14 +12,14 @@ const List = ({ token }) => {
 
       const response = await axios.get(backendUrl + '/api/product/list')
       if (response.data.success) {
-        setList(response.data.products.reverse());
+        setList([...response.data.products]);
       }
       else {
         toast.error(response.data.message)
       }
 
     } catch (error) {
-      console.log(error)
+      console.error('Fetch products error:', error.message)
       toast.error(error.message)
     }
   }
@@ -37,7 +37,7 @@ const List = ({ token }) => {
       }
 
     } catch (error) {
-      console.log(error)
+      console.error('Remove product error:', error.message)
       toast.error(error.message)
     }
   }

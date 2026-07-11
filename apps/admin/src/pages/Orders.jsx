@@ -20,7 +20,7 @@ const Orders = ({ token }) => {
 
       const response = await axios.post(backendUrl + '/api/order/list', {}, { headers: { token } })
       if (response.data.success) {
-        setOrders(response.data.orders.reverse())
+        setOrders([...response.data.orders])
       } else {
         toast.error(response.data.message)
       }
@@ -39,7 +39,7 @@ const Orders = ({ token }) => {
         await fetchAllOrders()
       }
     } catch (error) {
-      console.log(error)
+      console.error('Status update error:', error.message)
       toast.error(error.message)
     }
   }

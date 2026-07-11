@@ -88,5 +88,5 @@ app.use((err, req, res, _next) => {
 
 // Start server
 app.listen(port, () => {
-  console.log(`[${new Date().toISOString()}] Server started on PORT: ${port}`);
+  console.info(`[${new Date().toISOString()}] Server started on PORT: ${port}`);
 });

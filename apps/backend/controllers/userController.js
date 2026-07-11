@@ -93,6 +93,11 @@ const adminLogin = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Email and password are required.' });
     }
 
+    if (!process.env.ADMIN_EMAIL || !process.env.ADMIN_PASSWORD) {
+      console.error('Admin credentials are not configured in environment variables');
+      return res.status(500).json({ success: false, message: 'Server configuration error.' });
+    }
+
     if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
       // Sign a proper object payload with role identifier and expiry
       const token = jwt.sign(

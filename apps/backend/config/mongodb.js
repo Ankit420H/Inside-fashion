@@ -9,7 +9,7 @@ if (!cached) {
 
 const connectDB = async () => {
   if (cached.conn) {
-    console.log(`[${new Date().toISOString()}] Using cached MongoDB connection.`);
+    console.info(`[${new Date().toISOString()}] Using cached MongoDB connection.`);
     return cached.conn;
   }
 
@@ -17,7 +17,7 @@ const connectDB = async () => {
     const uri = `${process.env.MONGODB_URI}/e-commerce`;
     
     mongoose.connection.on('connected', () => {
-      console.log(`[${new Date().toISOString()}] MongoDB connected successfully.`);
+      console.info(`[${new Date().toISOString()}] MongoDB connected successfully.`);
     });
 
     mongoose.connection.on('error', (err) => {

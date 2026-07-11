@@ -17,14 +17,16 @@ const Orders = () => {
 
       const response = await axios.post(backendUrl + '/api/order/userorders',{},{headers:{token}})
       if (response.data.success) {
-        let allOrdersItem = []
-        response.data.orders.map((order)=>{
-          order.items.map((item)=>{
-            item['status'] = order.status
-            item['payment'] = order.payment
-            item['paymentMethod'] = order.paymentMethod
-            item['date'] = order.date
-            allOrdersItem.push(item)
+        const allOrdersItem = []
+        response.data.orders.forEach((order) => {
+          order.items.forEach((item) => {
+            allOrdersItem.push({
+              ...item,
+              status: order.status,
+              payment: order.payment,
+              paymentMethod: order.paymentMethod,
+              date: order.date,
+            })
           })
         })
         setorderData(allOrdersItem.reverse())

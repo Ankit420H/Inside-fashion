@@ -7,13 +7,33 @@ import Razorpay from 'razorpay';
 const currency = 'inr';
 const deliveryCharge = 10;
 
-// Gateway initialization
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+// Lazy-initialized payment gateways to prevent cold-start crashes
+// if env vars are missing
+let _stripe = null;
+let _razorpay = null;
 
-const razorpayInstance = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
+const getStripe = () => {
+  if (!_stripe) {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error('STRIPE_SECRET_KEY is not configured');
+    }
+    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  }
+  return _stripe;
+};
+
+const getRazorpay = () => {
+  if (!_razorpay) {
+    if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+      throw new Error('Razorpay credentials are not configured');
+    }
+    _razorpay = new Razorpay({
+      key_id: process.env.RAZORPAY_KEY_ID,
+      key_secret: process.env.RAZORPAY_KEY_SECRET,
+    });
+  }
+  return _razorpay;
+};
 
 // Placing orders using COD Method
 const placeOrder = async (req, res) => {
@@ -93,7 +113,7 @@ const placeOrderStripe = async (req, res) => {
       quantity: 1,
     });
 
-    const session = await stripe.checkout.sessions.create({
+    const session = await getStripe().checkout.sessions.create({
       success_url: `${origin}/verify?success=true&orderId=${newOrder._id}`,
       cancel_url: `${origin}/verify?success=false&orderId=${newOrder._id}`,
       line_items,
@@ -175,7 +195,7 @@ const placeOrderRazorpay = async (req, res) => {
     };
 
     // Use promise-based API instead of callback
-    const order = await razorpayInstance.orders.create(options);
+    const order = await getRazorpay().orders.create(options);
     res.json({ success: true, order });
   } catch (error) {
     console.error(`[${new Date().toISOString()}] Razorpay order error:`, error.message);
@@ -193,7 +213,7 @@ const verifyRazorpay = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Razorpay order ID is required.' });
     }
 
-    const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id);
+    const orderInfo = await getRazorpay().orders.fetch(razorpay_order_id);
 
     if (orderInfo.status === 'paid') {
       // Verify the order belongs to this user

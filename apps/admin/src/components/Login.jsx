@@ -19,7 +19,7 @@ const Login = ({setToken}) => {
             }
              
         } catch (error) {
-            console.log(error);
+            console.error('Admin login error:', error.message);
             toast.error(error.message)
         }
     }
