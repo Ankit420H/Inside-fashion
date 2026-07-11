@@ -3,6 +3,7 @@ import {assets} from '../assets/assets'
 import axios from 'axios'
 import { backendUrl } from '../App'
 import { toast } from 'react-toastify'
+import imageCompression from 'browser-image-compression'
 
 const useImagePreview = (file) => {
   const [preview, setPreview] = useState(null);
@@ -37,6 +38,25 @@ const Add = ({token}) => {
    const [subCategory, setSubCategory] = useState("Topwear");
    const [bestseller, setBestseller] = useState(false);
    const [sizes, setSizes] = useState([]);
+
+   const handleImageUpload = async (file, setImage) => {
+    if (!file) return;
+
+    try {
+      const options = {
+        maxSizeMB: 1, // Vercel limit is 4.5MB, 1MB is safe and highly optimized
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+      };
+      
+      const compressedFile = await imageCompression(file, options);
+      setImage(compressedFile);
+    } catch (error) {
+      console.error('Image compression error:', error);
+      toast.error('Failed to compress image.');
+      setImage(file); // Fallback to original
+    }
+   };
 
    const onSubmitHandler = async (e) => {
     e.preventDefault();
@@ -87,19 +107,19 @@ const Add = ({token}) => {
           <div className='flex gap-2'>
             <label htmlFor="image1">
               <img className='w-20 cursor-pointer' src={!image1 ? assets.upload_area : image1Preview} alt="Upload image 1" />
-              <input onChange={(e)=>setImage1(e.target.files[0])} type="file" id="image1" name="image1" hidden/>
+              <input onChange={(e)=>handleImageUpload(e.target.files[0], setImage1)} type="file" id="image1" name="image1" hidden/>
             </label>
             <label htmlFor="image2">
               <img className='w-20 cursor-pointer' src={!image2 ? assets.upload_area : image2Preview} alt="Upload image 2" />
-              <input onChange={(e)=>setImage2(e.target.files[0])} type="file" id="image2" name="image2" hidden/>
+              <input onChange={(e)=>handleImageUpload(e.target.files[0], setImage2)} type="file" id="image2" name="image2" hidden/>
             </label>
             <label htmlFor="image3">
               <img className='w-20 cursor-pointer' src={!image3 ? assets.upload_area : image3Preview} alt="Upload image 3" />
-              <input onChange={(e)=>setImage3(e.target.files[0])} type="file" id="image3" name="image3" hidden/>
+              <input onChange={(e)=>handleImageUpload(e.target.files[0], setImage3)} type="file" id="image3" name="image3" hidden/>
             </label>
             <label htmlFor="image4">
               <img className='w-20 cursor-pointer' src={!image4 ? assets.upload_area : image4Preview} alt="Upload image 4" />
-              <input onChange={(e)=>setImage4(e.target.files[0])} type="file" id="image4" name="image4" hidden/>
+              <input onChange={(e)=>handleImageUpload(e.target.files[0], setImage4)} type="file" id="image4" name="image4" hidden/>
             </label>
           </div>
         </div>
